@@ -12,14 +12,16 @@ Built with **ASP.NET Core MVC**, **Entity Framework Core**, and **SQL Server**, 
     <th>Public Menu</th>
     <th>Admin Dashboard</th>
   </tr>
-  <tr>
-    <td width="50%">
-      <img src="https://github.com/user-attachments/assets/dedcc7c4-ca23-4904-81fa-c0f7d8b0dbdb" alt="BohoMenu Public Menu" width="100%">
-    </td>
-    <td width="50%">
-      <img src="https://github.com/user-attachments/assets/24dc6af7-9836-4461-a43f-8aee69cd4ca0" alt="BohoMenu Admin Dashboard" width="100%">
-    </td>
-  </tr>
+ <tr>
+  <td width="50%">
+    <img src="https://github.com/user-attachments/assets/f6da9129-5cca-43f3-bd03-30a2fe9ac52f"
+         alt="BohoMenu Public Menu" width="100%">
+  </td>
+  <td width="50%">
+    <img src="https://github.com/user-attachments/assets/eaca96c6-a574-4014-952e-a429a3a42749"
+         alt="BohoMenu Admin Dashboard" width="100%">
+  </td>
+</tr>
 </table>
 
 ## ✨ Features
