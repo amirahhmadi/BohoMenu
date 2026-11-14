@@ -18,7 +18,7 @@ Built with **ASP.NET Core MVC**, **Entity Framework Core**, and **SQL Server**, 
          alt="BohoMenu Public Menu" width="100%">
   </td>
   <td width="50%">
-    <img src="https://github.com/user-attachments/assets/eaca96c6-a574-4014-952e-a429a3a42749"
+    <img src="https://github.com/user-attachments/assets/a9eee34c-7c6a-46bc-b9fd-858cb0186957"
          alt="BohoMenu Admin Dashboard" width="100%">
   </td>
 </tr>
