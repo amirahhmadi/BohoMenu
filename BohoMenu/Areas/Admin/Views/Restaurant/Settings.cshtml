@@ -1,0 +1,223 @@
+﻿@using BohoMenu.Core.DTOs.Requests.Restaurant
+@model UpdateRestaurantRequest
+
+@{
+    ViewData["Title"] = "مشخصات کافه";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div>
+                    <h4 class="mb-1">مشخصات کافه</h4>
+                    <p class="text-muted mb-0">
+                        اطلاعات اصلی کافه خود را مدیریت کنید.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-8 col-lg-10">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            اطلاعات اصلی کافه
+                        </h5>
+
+                        <form method="post"
+                              asp-controller="Restaurant"
+                              asp-action="Settings"
+                              enctype="multipart/form-data">
+
+                            @Html.AntiForgeryToken()
+
+                            <div asp-validation-summary="ModelOnly"
+                                 class="text-danger mb-3">
+                            </div>
+
+                            <!-- Restaurant Name -->
+                            <div class="mb-4">
+
+                                <label asp-for="RestaurantName" class="form-label">
+                                    نام کافه
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input asp-for="RestaurantName"
+                                       class="form-control"
+                                       placeholder="مثلاً کافه بوهو"
+                                       maxlength="150" />
+
+                                <span asp-validation-for="RestaurantName"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Restaurant Tagline -->
+                            <div class="mb-4">
+
+                                <label asp-for="Tagline" class="form-label">
+                                    شعار کوتاه کافه
+                                </label>
+
+                                <textarea asp-for="Tagline"
+                                          class="form-control"
+                                          rows="3"
+                                          maxlength="300"
+                                          placeholder="مثلاً طعم لحظه‌های خوب زندگی"></textarea>
+
+                                <span asp-validation-for="Tagline"
+                                      class="text-danger small">
+                                </span>
+
+                                <small class="text-muted">
+                                    یک جمله کوتاه برای معرفی کافه بنویسید.
+                                </small>
+
+                            </div>
+
+                            <!-- Restaurant Logo -->
+                            <div class="mb-4">
+
+                                <label asp-for="Logo" class="form-label">
+                                    لوگوی کافه
+                                </label>
+
+                                <input asp-for="Logo"
+                                       type="file"
+                                       class="form-control"
+                                       accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
+
+                                <span asp-validation-for="Logo"
+                                      class="text-danger small">
+                                </span>
+
+                                <small class="text-muted">
+                                    فرمت‌های مجاز: PNG، JPG و WEBP
+                                    (حداکثر حجم: ۲ مگابایت)
+                                </small>
+
+                            </div>
+
+                            <!-- Logo Preview -->
+                            <div class="mb-4">
+
+                                <label class="form-label">
+                                    پیش‌نمایش لوگو
+                                </label>
+
+                                <div class="border rounded p-3 text-center"
+                                     style="max-width: 220px;">
+
+                                    <img id="logoPreview"
+                                         src="@Model.LogoUrl"
+                                         alt="لوگوی کافه"
+                                         style="max-width: 150px; max-height: 120px; object-fit: contain; display: @(string.IsNullOrEmpty(Model.LogoUrl) ? "none" : "inline-block");" />
+
+                                    <div id="logoPlaceholder"
+                                         class="text-muted py-3"
+                                         style="display: @(string.IsNullOrEmpty(Model.LogoUrl) ? "block" : "none");">
+
+                                        <i data-eva="image-outline"
+                                           style="width: 35px; height: 35px;"></i>
+
+                                        <p class="mb-0 mt-2">
+                                            هنوز لوگویی ثبت نشده است.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <hr />
+
+                            <!-- Buttons -->
+                            <div class="d-flex align-items-center gap-2">
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i data-eva="save-outline" class="me-1"></i>
+                                    ذخیره تغییرات
+
+                                </button>
+
+                                <a asp-controller="Categories"
+                                   asp-action="Index"
+                                   class="btn btn-light">
+
+                                    انصراف
+
+                                </a>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const logoInput = document.getElementById('Logo');
+        const preview = document.getElementById('logoPreview');
+        const placeholder = document.getElementById('logoPlaceholder');
+
+        let currentPreviewUrl = null;
+
+        logoInput.addEventListener('change', function (event) {
+
+            const file = event.target.files[0];
+
+            if (!file) return;
+
+            const allowedTypes = [
+                'image/png',
+                'image/jpeg',
+                'image/webp'
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('فرمت تصویر انتخاب شده معتبر نیست.');
+                event.target.value = '';
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('حجم تصویر نباید بیشتر از ۲ مگابایت باشد.');
+                event.target.value = '';
+                return;
+            }
+
+            if (currentPreviewUrl) {
+                URL.revokeObjectURL(currentPreviewUrl);
+            }
+
+            currentPreviewUrl = URL.createObjectURL(file);
+
+            preview.src = currentPreviewUrl;
+            preview.style.display = 'inline-block';
+
+            placeholder.style.display = 'none';
+        });
+    </script>
+
+}

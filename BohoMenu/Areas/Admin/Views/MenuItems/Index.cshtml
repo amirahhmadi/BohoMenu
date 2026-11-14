@@ -1,0 +1,236 @@
+﻿@using System.Globalization
+@model List<BohoMenu.Core.DTOs.Responses.MenuItem.MenuItemDto>
+
+@{
+    ViewData["Title"] = "مدیریت آیتم‌ها";
+
+    var categoryName = Model.FirstOrDefault()?.CategoryTitle ?? "همه دسته‌بندی‌ها";
+    var persianCulture = CultureInfo.GetCultureInfo("fa-IR");
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+
+                    <div>
+                        <h4>مدیریت آیتم‌های @ViewBag.CategoryTitle</h4>
+
+                        <p class="text-muted mb-0">
+                            مشاهده و مدیریت آیتم‌های منوی رستوران
+                        </p>
+                    </div>
+
+                    <a asp-controller="MenuItems"
+                       asp-action="Create"
+                       asp-route-categoryId="@ViewBag.CategoryId"
+                       class="btn btn-primary">
+                        افزودن آیتم جدید
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Info -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-center justify-content-between">
+
+                            <div>
+                                <p class="text-muted mb-1">
+                                    دسته‌بندی
+                                </p>
+
+                                <h5 class="mb-0">
+                                    @categoryName
+                                </h5>
+                            </div>
+
+                            <a asp-controller="Categories"
+                               asp-action="Index"
+                               class="btn btn-light btn-sm">
+
+                                <i data-eva="arrow-back-outline"></i>
+                                بازگشت به دسته‌بندی‌ها
+
+                            </a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+
+                            <h5 class="card-title mb-0">
+                                لیست آیتم‌ها
+                            </h5>
+
+                            <span class="badge bg-soft-primary text-primary">
+                                @Model.Count آیتم
+                            </span>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle mb-0">
+
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>تصویر</th>
+                                        <th>نام آیتم</th>
+                                        <th>دسته‌بندی</th>
+                                        <th>توضیحات</th>
+                                        <th>قیمت</th>
+                                        <th>وضعیت</th>
+                                        <th class="text-center">عملیات</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @if (Model.Any())
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                                                    {
+                                                        <img src="@item.ImageUrl"
+                                                             alt="@item.Name"
+                                                             class="rounded"
+                                                             style="width: 55px; height: 55px; object-fit: cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                                             style="width: 55px; height: 55px;">
+                                                            <i data-eva="image-outline" class="text-muted"></i>
+                                                        </div>
+                                                    }
+                                        </td>
+
+                                        <td>
+                                            <div class="fw-medium">
+                                                @item.Name
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge bg-light text-dark">
+                                                @item.CategoryTitle
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="text-muted">
+                                                @(string.IsNullOrWhiteSpace(item.Description)
+                                                                                                ? "بدون توضیحات"
+                                                                                                : item.Description)
+                                            </span>
+                                        </td>
+
+                                                <td>
+                                                    <span class="fw-medium">
+                                                        @item.Price.ToString("N0", persianCulture)
+                                                        تومان
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                            @if (item.IsAvailable)
+                                                    {
+                                                        <span class="badge bg-soft-success text-success">
+                                                            فعال
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-soft-danger text-danger">
+                                                            ناموجود
+                                                        </span>
+                                                    }
+                                                </td>
+
+                                                <td>
+                                                    <div class="d-flex justify-content-center gap-2">
+
+                                                        <a asp-controller="MenuItems"
+                                                           asp-action="Edit"
+                                                           asp-route-id="@item.Id"
+                                                           class="btn btn-soft-warning btn-sm"
+                                                           title="ویرایش">
+
+                                                            <i data-eva="edit-2-outline"></i>
+                                                            ویرایش
+                                                        </a>
+
+                                                        <form asp-controller="MenuItems"
+                                                              asp-action="Delete"
+                                                              asp-route-id="@item.Id"
+                                                              method="post"
+                                                              onsubmit="return confirm('آیا از حذف این آیتم اطمینان دارید؟');">
+
+                                                            @Html.AntiForgeryToken()
+
+                                                            <button type="submit"
+                                                                    class="btn btn-soft-danger btn-sm"
+                                                                    title="حذف">
+
+                                                                <i data-eva="trash-2-outline"></i>
+                                                                حذف
+
+                                                            </button>
+
+                                                        </form>
+
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="7" class="text-center py-5">
+                                                <div class="text-muted">
+                                                    هنوز هیچ آیتمی ثبت نشده است.
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

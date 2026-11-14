@@ -1,0 +1,122 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<BohoMenu.Core.DTOs.Responses.Category.CategoryDto>
+@{
+    ViewData["Title"] = "مدیریت دسته‌بندی‌ها";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- Page Title -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="mb-1">مدیریت دسته‌بندی‌ها</h4>
+                        <p class="text-muted mb-0">
+                            مشاهده و مدیریت دسته‌بندی‌های منوی رستوران
+                        </p>
+                    </div>
+
+                    <a asp-area="Admin"
+                       asp-controller="Categories"
+                       asp-action="Create" class="btn btn-primary">
+                        <i data-eva="plus" class="me-1"></i>
+                        افزودن دسته‌بندی
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="row">
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body text-center py-5">
+                            <i data-eva="folder-outline" class="mb-3" style="width:48px;height:48px;"></i>
+                            <h5 class="mb-1">دسته‌بندی‌ای ثبت نشده است</h5>
+                            <p class="text-muted mb-3">
+                                هنوز هیچ دسته‌بندی‌ای برای منوی رستوران ایجاد نشده است.
+                            </p>
+                            <a asp-area="Admin"
+                               asp-controller="Categories"
+                               asp-action="Create"
+                               class="btn btn-primary btn-sm">
+                                <i data-eva="plus" class="me-1"></i>
+                                افزودن اولین دسته‌بندی
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @foreach (var category in Model)
+                {
+                    <div class="col-xl-4 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h5 class="mb-4">
+                                    @category.Title
+                                </h5>
+
+                                <div class="row text-center mb-4">
+
+                                    <div class="col-6">
+                                        <h4 class="mb-1">
+                                            @category.TotalItems
+                                        </h4>
+                                        <p class="text-muted mb-0">
+                                            تعداد کل آیتم‌ها
+                                        </p>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <h4 class="mb-1 text-success">
+                                            @category.ActiveItems
+                                        </h4>
+                                        <p class="text-muted mb-0">
+                                            آیتم‌های فعال
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <hr />
+
+                                <div class="d-flex gap-2">
+
+                                    <a asp-area="Admin"
+                                       asp-controller="MenuItems"
+                                       asp-action="Index"
+                                       asp-route-categoryId="@category.Id"
+                                       class="btn btn-primary btn-sm">
+                                        مدیریت آیتم‌ها
+                                    </a>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="Categories"
+                                       asp-action="Edit"
+                                       asp-route-id="@category.Id"
+                                       class="btn btn-soft-warning btn-sm">
+
+                                        <i data-eva="edit-2-outline"></i>
+                                        ویرایش
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+</div>

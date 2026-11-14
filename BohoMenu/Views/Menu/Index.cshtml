@@ -1,0 +1,159 @@
+﻿@using System.Globalization
+@model BohoMenu.Core.DTOs.Responses.Restaurant.MenuPageDto
+@{
+    ViewData["Title"] = "منوی رستوران";
+
+    var persianCulture = CultureInfo.GetCultureInfo("fa-IR");
+}
+
+<!-- Restaurant Header -->
+<header class="hero">
+
+    @if (!string.IsNullOrWhiteSpace(Model.LogoUrl))
+    {
+        <img src="@Model.LogoUrl"
+             alt="لوگوی @Model.RestaurantName"
+             class="restaurant-logo" />
+    }
+
+    <h1>@Model.RestaurantName</h1>
+    <p>@Model.Tagline</p>
+
+</header>
+
+<!-- Search & Categories -->
+<div class="bar">
+
+    <form method="get"
+          action="@Url.Action("Index", "Menu")"
+          class="search"
+          role="search">
+
+        @if (Model.SelectedCategoryId.HasValue)
+        {
+            <input type="hidden"
+                   name="categoryId"
+                   value="@Model.SelectedCategoryId" />
+        }
+
+        <input type="search"
+               name="query"
+               value="@Model.Query"
+               placeholder="جستجو در کل منو"
+               aria-label="جستجو در کل منو"
+               enterkeyhint="search">
+
+        <button type="submit">جستجو</button>
+
+    </form>
+
+    <nav id="tabs" aria-label="دسته‌بندی منو">
+
+        <a href="@Url.Action("Index", "Menu")"
+           class="@(Model.SelectedCategoryId == null ? "on" : "")"
+           aria-current="@(Model.SelectedCategoryId == null ? "page" : null)">
+            همه
+        </a>
+
+        @foreach (var category in Model.Categories)
+        {
+            <a href="@Url.Action("Index", "Menu", new { categoryId = category.Id, query = Model.Query })"
+               class="@(Model.SelectedCategoryId == category.Id ? "on" : "")"
+               aria-current="@(Model.SelectedCategoryId == category.Id ? "page" : null)">
+
+                @category.Title
+
+            </a>
+        }
+
+    </nav>
+
+</div>
+
+<!-- Menu Items -->
+<main id="items">
+
+    @if (Model.SelectedCategoryId.HasValue)
+    {
+        var selectedCategory = Model.Categories
+        .FirstOrDefault(x => x.Id == Model.SelectedCategoryId);
+
+        <h2 class="cat-title">
+            @selectedCategory?.Title
+        </h2>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.Query))
+    {
+        <h2 class="cat-title">
+            نتایج جستجو
+        </h2>
+    }
+    else
+    {
+        <h2 class="cat-title">
+            منوی رستوران
+        </h2>
+    }
+
+    @if (Model.Results.Any())
+    {
+        <div class="grid">
+
+            @foreach (var item in Model.Results)
+            {
+                <article class="item">
+
+                    <div class="pic">
+
+                        @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl"
+                                 alt="@item.Name"
+                                 loading="lazy">
+                        }
+                        else
+                        {
+                            <span aria-hidden="true">🌿</span>
+                        }
+
+                    </div>
+
+                    <div class="info">
+
+                        <h3>@item.Name</h3>
+
+                        @if (!string.IsNullOrWhiteSpace(item.Description))
+                        {
+                            <p>@item.Description</p>
+                        }
+
+                        <div class="meta">
+                            <span class="price">
+                                @item.Price.ToString("N0", persianCulture) تومان
+                            </span>
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-menu">
+            <p>
+                @if (!string.IsNullOrWhiteSpace(Model.Query))
+                {
+                    <text>محصولی با این عبارت پیدا نشد.</text>
+                }
+                else
+                {
+                    <text>در حال حاضر محصولی برای نمایش وجود ندارد.</text>
+                }
+            </p>
+        </div>
+    }
+
+</main>

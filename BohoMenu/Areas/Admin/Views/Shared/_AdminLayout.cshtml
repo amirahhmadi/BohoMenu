@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Admin Panel</title>
+
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/Admin/images/favicon.ico">
+
+    <!-- Bootstrap Css -->
+    <link href="/Admin/css/bootstrap-rtl.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+
+    <!-- Icons Css -->
+    <link href="/Admin/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="/Admin/css/app-rtl.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="/Admin/css/rtl.css" rel="stylesheet" type="text/css" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body data-sidebar="dark">
+
+    @await Html.PartialAsync("_VerticalHeader")
+
+    @await Html.PartialAsync("_Sidebar")
+
+    <div id="layout-wrapper">
+        <div class="main-content">
+
+            @RenderBody()
+
+            @await Html.PartialAsync("_Footer")
+
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_Scripts")
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

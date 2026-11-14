@@ -1,0 +1,164 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool IsActive(string controller, string? action = null)
+    {
+        return currentController == controller &&
+               (action == null || currentAction == action);
+    }
+}
+
+<div class="vertical-menu">
+
+    <div class="navbar-brand-box d-flex align-items-center justify-content-center">
+
+        <a asp-area="Admin"
+           asp-controller="Categories"
+           asp-action="Index"
+           class="logo logo-dark text-decoration-none">
+
+            <span class="logo-sm fw-bold">
+                <i class="icon nav-icon" data-eva="coffee-outline"></i>
+            </span>
+
+            <span class="logo-lg fw-bold fs-5">
+                مدیریت کافه
+            </span>
+
+        </a>
+
+        <a asp-area="Admin"
+           asp-controller="Categories"
+           asp-action="Index"
+           class="logo logo-light text-decoration-none">
+
+            <span class="logo-sm fw-bold">
+                <i class="icon nav-icon" data-eva="coffee-outline"></i>
+            </span>
+
+            <span class="logo-lg fw-bold fs-5">
+                مدیریت کافه
+            </span>
+
+        </a>
+
+    </div>
+
+    <!-- SIDEBAR MENU -->
+    <div data-simplebar="" class="sidebar-menu-scroll">
+
+        <div id="sidebar-menu">
+
+            <ul class="metismenu list-unstyled" id="side-menu">
+
+                <li class="menu-title">
+                    مدیریت کافه
+                </li>
+
+                <!-- Categories -->
+                <li class="@(IsActive("Categories") ? "mm-active" : "")">
+
+                    <a asp-area="Admin"
+                       asp-controller="Categories"
+                       asp-action="Index"
+                       class="@(IsActive("Categories") ? "active" : "")">
+
+                        <i class="icon nav-icon" data-eva="grid-outline"></i>
+
+                        <span class="menu-item">
+                            دسته‌بندی‌ها
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <!-- Restaurant Settings -->
+                <li class="@(IsActive("Restaurant") ? "mm-active" : "")">
+
+                    <a asp-area="Admin"
+                       asp-controller="Restaurant"
+                       asp-action="Settings"
+                       class="@(IsActive("Restaurant") ? "active" : "")">
+
+                        <i class="icon nav-icon" data-eva="coffee-outline"></i>
+
+                        <span class="menu-item">
+                            مشخصات کافه
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <!-- Change Password -->
+                <li class="@(IsActive("AdminAccount", "ChangePassword") ? "mm-active" : "")">
+
+                    <a asp-area="Admin"
+                       asp-controller="AdminAccount"
+                       asp-action="ChangePassword"
+                       class="@(IsActive("AdminAccount", "ChangePassword") ? "active" : "")">
+
+                        <i class="icon nav-icon" data-eva="lock-outline"></i>
+
+                        <span class="menu-item">
+                            تغییر رمز عبور
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <!-- Public Menu -->
+                <li>
+
+                    <a asp-area=""
+                       asp-controller="Menu"
+                       asp-action="Index"
+                       target="_blank">
+
+                        <i class="icon nav-icon" data-eva="book-open-outline"></i>
+
+                        <span class="menu-item">
+                            نمایش منو
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <!-- Logout -->
+                <li>
+
+                    <a href="#"
+                       onclick="document.getElementById('logoutForm').submit(); return false;">
+
+                        <i class="icon nav-icon" data-eva="log-out-outline"></i>
+
+                        <span class="menu-item">
+                            خروج از حساب
+                        </span>
+
+                    </a>
+
+                    <form id="logoutForm"
+                          asp-area="Admin"
+                          asp-controller="AdminAccount"
+                          asp-action="Logout"
+                          method="post"
+                          class="d-none">
+
+                        @Html.AntiForgeryToken()
+
+                    </form>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>

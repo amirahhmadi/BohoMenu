@@ -1,0 +1,285 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BohoMenu.Core.DTOs.Responses.Category
+@model BohoMenu.Core.DTOs.Requests.MenuItem.CreateMenuItemRequest
+
+@{
+    ViewData["Title"] = "افزودن آیتم جدید";
+    var categories = ViewBag.Categories as List<CategoryDto>
+                    ?? new List<CategoryDto>();
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div>
+                    <h4 class="mb-1">افزودن آیتم جدید</h4>
+                    <p class="text-muted mb-0">
+                        ثبت آیتم جدید در منوی رستوران
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-8 col-lg-10">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            اطلاعات آیتم
+                        </h5>
+
+                        <form asp-controller="MenuItems"
+                              asp-action="Create"
+                              asp-route-categoryId="@Model.CategoryId"
+                              method="post"
+                              enctype="multipart/form-data">
+
+                            @Html.AntiForgeryToken()
+
+                            <div class="mb-3">
+                                <label class="form-label">دسته‌بندی</label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       value="@ViewBag.CategoryTitle"
+                                       readonly />
+                            </div>
+
+                            <!-- Item Name -->
+                            <div class="mb-4">
+
+                                <label asp-for="Name" class="form-label">
+                                    نام آیتم
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input asp-for="Name"
+                                       class="form-control"
+                                       placeholder="مثلاً چلو کباب کوبیده"
+                                       maxlength="150" />
+
+                                <span asp-validation-for="Name"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+
+                                <label asp-for="Description"
+                                       class="form-label">
+                                    توضیحات کوتاه
+                                </label>
+
+                                <textarea asp-for="Description"
+                                          class="form-control"
+                                          rows="3"
+                                          maxlength="1000"
+                                          placeholder="توضیح مختصری درباره آیتم وارد کنید..."></textarea>
+
+                                <span asp-validation-for="Description"
+                                      class="text-danger small">
+                                </span>
+
+                                <small class="text-muted">
+                                    حداکثر ۱۰۰۰ کاراکتر
+                                </small>
+
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-4">
+
+                                <label asp-for="Price" class="form-label">
+                                    قیمت (تومان)
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input asp-for="Price"
+                                       type="number"
+                                       class="form-control"
+                                       min="0"
+                                       step="1"
+                                       placeholder="مثلاً 250000" />
+
+                                <span asp-validation-for="Price"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Image -->
+                            <div class="mb-4">
+
+                                <label asp-for="Image" class="form-label">
+                                    تصویر آیتم
+                                </label>
+
+                                <input asp-for="Image"
+                                       type="file"
+                                       class="form-control"
+                                       accept=".jpg,.jpeg,.png,.webp"
+                                       id="imageInput" />
+
+                                <span asp-validation-for="Image"
+                                      class="text-danger small">
+                                </span>
+
+                                <small class="text-muted d-block mt-2">
+                                    فرمت‌های مجاز: JPG، PNG و WEBP
+                                </small>
+
+                                <!-- Image Preview -->
+                                <div id="imagePreviewContainer" class="mt-3" style="display: none;">
+
+                                    <label class="form-label d-block">
+                                        پیش‌نمایش تصویر
+                                    </label>
+
+                                    <div class="border rounded p-2 d-inline-block">
+                                        <img id="imagePreview"
+                                             src=""
+                                             alt="پیش‌نمایش تصویر آیتم"
+                                             style="max-width: 250px; max-height: 200px; object-fit: cover; border-radius: 8px;" />
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <button type="button"
+                                                id="removeImageButton"
+                                                class="btn btn-sm btn-outline-danger">
+                                            <i data-eva="trash-2-outline" class="me-1"></i>
+                                            حذف تصویر انتخاب‌شده
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-4">
+
+                                <label class="form-label d-block">
+                                    وضعیت آیتم
+                                </label>
+
+                                <div class="form-check form-switch">
+
+                                    <input asp-for="IsAvailable"
+                                           class="form-check-input" />
+
+                                    <label asp-for="IsAvailable"
+                                           class="form-check-label">
+                                        آیتم موجود و قابل سفارش باشد
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                            <hr />
+
+                            <!-- Buttons -->
+                            <div class="d-flex align-items-center gap-2">
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i data-eva="plus-outline"
+                                       class="me-1"></i>
+
+                                    ثبت آیتم
+
+                                </button>
+
+                                <a asp-controller="MenuItems"
+                                   asp-action="Index"
+                                   class="btn btn-light">
+                                    انصراف
+                                </a>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const removeImageButton = document.getElementById('removeImageButton');
+
+        let currentImageUrl = null;
+
+        imageInput.addEventListener('change', function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+                clearPreview();
+                return;
+            }
+
+            const allowedTypes = [
+                'image/jpeg',
+                'image/png',
+                'image/webp'
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('فرمت تصویر انتخاب‌شده معتبر نیست.');
+                this.value = '';
+                clearPreview();
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('حجم تصویر نباید بیشتر از ۲ مگابایت باشد.');
+                this.value = '';
+                clearPreview();
+                return;
+            }
+
+            if (currentImageUrl) {
+                URL.revokeObjectURL(currentImageUrl);
+            }
+
+            currentImageUrl = URL.createObjectURL(file);
+
+            imagePreview.src = currentImageUrl;
+            previewContainer.style.display = 'block';
+        });
+
+        removeImageButton.addEventListener('click', function () {
+            imageInput.value = '';
+            clearPreview();
+        });
+
+        function clearPreview() {
+            if (currentImageUrl) {
+                URL.revokeObjectURL(currentImageUrl);
+                currentImageUrl = null;
+            }
+
+            imagePreview.src = '';
+            previewContainer.style.display = 'none';
+        }
+    </script>
+}

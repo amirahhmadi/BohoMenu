@@ -1,0 +1,241 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BohoMenu.Core.DTOs.Responses.Category
+@model BohoMenu.Core.DTOs.Requests.MenuItem.UpdateMenuItemRequest
+
+@{
+    ViewData["Title"] = "ویرایش آیتم";
+
+    var categories = ViewBag.Categories as List<CategoryDto>
+                     ?? new List<CategoryDto>();
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div>
+                    <h4 class="mb-1">ویرایش آیتم</h4>
+                    <p class="text-muted mb-0">
+                        ویرایش اطلاعات آیتم منوی رستوران
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-xl-8 col-lg-10">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            اطلاعات آیتم
+                        </h5>
+
+                        <form method="post"
+                              asp-controller="MenuItems"
+                              asp-action="Edit"
+                              asp-route-id="@Model.Id"
+                              enctype="multipart/form-data">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" asp-for="Id" />
+
+                            <div asp-validation-summary="ModelOnly"
+                                 class="text-danger mb-3">
+                            </div>
+
+                            <!-- Category -->
+                            <div class="mb-4">
+
+                                <label asp-for="CategoryId"
+                                       class="form-label">
+                                    دسته‌بندی
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <select asp-for="CategoryId"
+                                        class="form-select">
+
+                                    <option value="0">
+                                        انتخاب دسته‌بندی
+                                    </option>
+
+                                    @foreach (var category in categories)
+                                    {
+                                        <option value="@category.Id">
+                                            @category.Title
+                                        </option>
+                                    }
+
+                                </select>
+
+                                <span asp-validation-for="CategoryId"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Item Name -->
+                            <div class="mb-4">
+
+                                <label asp-for="Name" class="form-label">
+                                    نام آیتم
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input asp-for="Name"
+                                       class="form-control"
+                                       placeholder="مثلاً چلو کباب کوبیده"
+                                       maxlength="150" />
+
+                                <span asp-validation-for="Name"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+
+                                <label asp-for="Description"
+                                       class="form-label">
+                                    توضیحات کوتاه
+                                </label>
+
+                                <textarea asp-for="Description"
+                                          class="form-control"
+                                          rows="3"
+                                          maxlength="1000"
+                                          placeholder="توضیح مختصری درباره آیتم وارد کنید..."></textarea>
+
+                                <span asp-validation-for="Description"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-4">
+
+                                <label asp-for="Price" class="form-label">
+                                    قیمت (تومان)
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input asp-for="Price"
+                                       type="number"
+                                       class="form-control"
+                                       min="0"
+                                       step="1"
+                                       placeholder="مثلاً 250000" />
+
+                                <span asp-validation-for="Price"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Current Image -->
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div class="mb-4">
+
+                                    <label class="form-label d-block">
+                                        تصویر فعلی
+                                    </label>
+
+                                    <img src="@Model.ImageUrl"
+                                         alt="@Model.Name"
+                                         class="img-thumbnail"
+                                         style="width: 180px; height: 140px; object-fit: cover;" />
+
+                                </div>
+                            }
+
+                            <!-- New Image -->
+                            <div class="mb-4">
+
+                                <label asp-for="Image" class="form-label">
+                                    تصویر جدید
+                                </label>
+
+                                <input asp-for="Image"
+                                       type="file"
+                                       class="form-control"
+                                       accept=".jpg,.jpeg,.png,.webp" />
+
+                                <span asp-validation-for="Image"
+                                      class="text-danger small">
+                                </span>
+
+                                <small class="text-muted">
+                                    در صورت انتخاب تصویر جدید، تصویر قبلی جایگزین خواهد شد.
+                                    در غیر این صورت تصویر فعلی حفظ می‌شود.
+                                </small>
+
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-4">
+
+                                <label class="form-label d-block">
+                                    وضعیت آیتم
+                                </label>
+
+                                <div class="form-check form-switch">
+
+                                    <input asp-for="IsAvailable"
+                                           class="form-check-input" />
+
+                                    <label asp-for="IsAvailable"
+                                           class="form-check-label">
+                                        آیتم موجود و قابل سفارش باشد
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                            <hr />
+
+                            <!-- Buttons -->
+                            <div class="d-flex align-items-center gap-2">
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i data-eva="save-outline"
+                                       class="me-1"></i>
+
+                                    ذخیره تغییرات
+
+                                </button>
+
+                                <a asp-controller="MenuItems"
+                                   asp-action="Index"
+                                   class="btn btn-light">
+                                    انصراف
+                                </a>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
